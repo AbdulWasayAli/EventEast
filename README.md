@@ -110,7 +110,7 @@ EventEase/
 
 ---
 
-## 🚀 How to Run the Project (Step-by-Step)
+## How to Run the Project (Step-by-Step)
 
 ### 1. Prerequisites
 - **Flutter SDK**: Version 3.11.4 or newer (`flutter --version`)
