@@ -1,160 +1,252 @@
-# EventEase - Comprehensive Event Management System
+# EventEast — Comprehensive Event Management System
 
-EventEase is a modern, full-featured event management mobile application built using **Flutter** and **Firebase**. It provides an end-to-end event lifecycle experience catering to three primary user roles: **Attendees**, **Organizers**, and **Platform Administrators**.
+> A modern, full-featured event management mobile application built with **Flutter** and **Firebase**, supporting three distinct user roles: **Attendees**, **Organizers**, and **Platform Administrators**.
 
 ---
 
-## 👥 User Roles & Detailed Responsibilities
+## 📱 App Overview
+
+**EventEast** provides a complete end-to-end event lifecycle experience:
+- Attendees discover, register, and attend events with QR passes.
+- Organizers create, manage, and monitor their events in real time.
+- Admins oversee the entire platform — users, content, and approvals.
+
+---
+
+## 👥 User Roles & Features
 
 ### 1. 🎟️ Attendee (General User)
-Designed for participants seeking to explore, register, attend, and review events.
-- **Home & Discover Feed**: Browse upcoming, trending, and nearby events with categorization and banners.
-- **Search & Advanced Filtering**: Filter events by category, date range, location, and keywords.
-- **Interactive Event Details**: Comprehensive view of event agenda, description, pricing, capacity, and organizer details.
-- **Interactive Venue Map**: View exact event location on an OpenStreetMap interface powered by `flutter_map`.
-- **Registration & Instant QR Pass**: Register for events and receive a dynamic QR code pass (`qr_flutter`) stored locally and in Cloud Firestore.
-- **Favorites & Bookmarks**: Save events to a personal wishlist for quick access.
-- **My Events Tracking**: Dedicated dashboard tab displaying registered, past, and upcoming events.
-- **Certificate Generation & Preview**: Download or preview participation/attendance certificates (`pdf` & `printing`).
-- **Feedback & Rating**: Rate attended events with multi-star reviews and comments (`flutter_rating_bar`).
-- **Event Gallery**: View event highlights and photos uploaded by organizers.
+- **Onboarding**: Smooth onboarding screens on first install.
+- **Home Dashboard**: Browse upcoming, trending, and nearby events with banners and category filters.
+- **Search & Filter**: Filter events by category, date range, location, and keywords.
+- **Event Details**: Full event view — description, agenda, pricing, capacity, organizer info.
+- **Interactive Map**: View exact venue location on OpenStreetMap (`flutter_map`).
+- **Register & QR Pass**: Instant QR pass generation (`qr_flutter`) stored in Firestore.
+- **My Events**: Track registered, upcoming, and past events.
+- **Favorites**: Bookmark events to a personal wishlist.
+- **Certificate**: Download/preview attendance certificate (PDF via `pdf` & `printing`).
+- **Gallery**: Browse event highlight photos uploaded by organizers.
+- **Feedback & Rating**: Submit multi-star reviews and comments (`flutter_rating_bar`).
+- **Notifications**: Receive push & local alerts for event updates.
 
 ---
 
 ### 2. 🎪 Organizer
-Designed for event creators, hosts, and coordinators.
-- **Organizer Analytics Dashboard**: Real-time stats on total registrations, active events, attendee engagement, and revenue/check-ins.
-- **Create & Edit Events**:
-  - Set title, description, category, datetime, and capacity.
-  - Upload event banner/images to Cloudinary CDN (`ImageUploadService`).
-  - **Location Picker**: Interactive map to drop a pin and set exact GPS coordinates (`LocationPickerScreen`).
-- **Participant Roster Management**: View attendee lists, search registered participants, and view their registration status.
-- **Live Attendance QR Scanner**: Scan attendee QR passes at the entrance using the camera scanner (`mobile_scanner`) for real-time check-in validation.
-- **Broadcast Announcements**: Send instant push notifications and updates to registered attendees (`firebase_messaging` & Google APIs auth).
-- **Gallery Upload**: Upload post-event images to share with attendees.
-- **Feedback Review**: Inspect ratings and constructive feedback submitted by attendees.
+- **Organizer Dashboard**: Real-time stats — total events, registrations, attendance, check-ins.
+- **Create & Edit Events**: Set title, description, category, datetime, capacity, and banner image.
+- **Location Picker**: Drop a pin on interactive map to set exact GPS coordinates.
+- **Participants Roster**: View and search registered attendees and their status.
+- **QR Attendance Scanner**: Scan attendee QR passes for real-time check-in (`mobile_scanner`).
+- **Broadcast Announcements**: Send instant push notifications to all registered attendees.
+- **Gallery Upload**: Upload post-event photos for attendees to browse.
+- **Feedback Review**: View attendee ratings and comments on your events.
 
 ---
 
 ### 3. 🛡️ Platform Administrator
-Designed for platform owners and moderators to ensure platform safety and quality.
-- **Admin Command Center**: Platform-wide metrics including user count, organizer approvals, total events, and reports.
-- **User & Role Management**: View, activate, suspend, or update permissions of users and organizers.
-- **Event Moderation & Management**: Edit or take down events that violate platform guidelines.
-- **Organizer Approvals**: Review verification requests from users applying to become organizers.
-- **Content & Media Moderation**: Inspect flagged gallery uploads, reviews, or comments.
-- **Reports & Escalations**: Resolve user complaints and reported policy infractions.
-
----
-
-## 🗺️ Map Feature Architecture
-
-EventEase integrates modern map visualization without requiring expensive Google Maps billing keys by leveraging **OpenStreetMap**:
-1. **Packages Used**:
-   - `flutter_map`: Leaflet-style tile rendering for OpenStreetMap.
-   - `latlong2`: Geospatial latitude/longitude coordinates manipulation.
-   - `geolocator`: Device GPS location fetching and distance calculations.
-2. **Location Picker (`LocationPickerScreen`)**:
-   - Used by organizers during event creation.
-   - Organizers can tap or drag a pin on the map to accurately pinpoint the venue address and GPS coordinates (`latitude`, `longitude`).
-3. **Event Map Viewer (`EventMapScreen`)**:
-   - Embedded or accessible directly from the event details screen.
-   - Attendees can inspect venue placement, view surrounding landmarks, and open navigation apps via `url_launcher`.
+- **Admin Dashboard**: Platform-wide metrics — user count, organizer approvals, total events.
+- **User & Role Management**: View, activate, suspend, or update user permissions.
+- **Event Moderation**: Edit or remove events that violate platform guidelines.
+- **Organizer Approvals**: Review and approve/reject organizer verification requests.
+- **Content Moderation**: Inspect flagged gallery uploads, reviews, or comments.
+- **Reports & Escalations**: Resolve user complaints and policy violation reports.
 
 ---
 
 ## 📂 Project Folder Structure
 
-The project follows a clean separation of concerns:
-
 ```text
-EventEase/
-├── android/                 # Native Android build configs & manifests
-├── ios/                     # Native iOS build configs & plist
-├── assets/                  # Static assets (images, icons, service credentials)
-│   ├── images/              # App banners, logos, and placeholders
-│   └── service-account.json # Firebase admin service account configuration
-├── lib/                     # Core Dart/Flutter application code
-│   ├── main.dart            # App entry point, MultiProvider setup, Firebase initialization
-│   ├── firebase_options.dart# Auto-generated Firebase multi-platform configs
-│   │
-│   ├── models/              # Data models with JSON serialization
-│   │   ├── event_model.dart         # Event entity & metadata
-│   │   ├── user_model.dart          # User profile & role definitions
-│   │   ├── registration_model.dart  # Event registration records & QR payload
-│   │   └── notification_model.dart  # In-app and push notification schema
-│   │
-│   ├── providers/           # State management (Provider pattern)
-│   │   ├── event_provider.dart      # Event listings, search, filtering & creation
-│   │   ├── admin_provider.dart      # Admin statistics, user and approval states
-│   │   └── ...                      # Additional state handlers
-│   │
-│   ├── screens/             # Presentation layer grouped by role & domain
-│   │   ├── admin/           # Admin Dashboard, User Management, Reports, Approvals
-│   │   ├── attendee/        # Event Discovery, Details, QR Pass, Feedback, Favorites
-│   │   ├── organizer/       # Event Creation/Editing, QR Attendance Scanner, Participants
-│   │   ├── auth/            # Login, Signup, Role onboarding, Password recovery
-│   │   ├── common/          # Profile management, Settings
-│   │   └── shared/          # Shared features (LocationPickerScreen, EventMapScreen)
-│   │
-│   ├── services/            # Background & Infrastructure Services
-│   │   ├── image_upload_service.dart # Cloudinary image upload handling
-│   │   ├── notification_service.dart # Firebase Cloud Messaging & local alerts
-│   │   └── ...                       # Auth & Firestore helper services
-│   │
-│   ├── theme/               # Colors, typography, custom themes, dark/light styling
-│   └── widgets/             # Reusable UI components (buttons, cards, banners, loaders)
+EventEast/
+├── android/                        # Native Android build configs & manifests
+├── ios/                            # Native iOS build configs & plists
+├── assets/
+│   ├── images/
+│   │   └── logo.jpg                # App logo used for launcher icon
+│   └── service-account.json        # Firebase admin service account (FCM notifications)
 │
-└── pubspec.yaml             # Project dependencies and asset registry
+├── lib/
+│   ├── main.dart                   # App entry point — Firebase init, MultiProvider, MaterialApp
+│   ├── firebase_options.dart       # Auto-generated Firebase multi-platform configuration
+│   │
+│   ├── models/                     # Data models with JSON serialization
+│   │   ├── event_model.dart        # Event entity & metadata
+│   │   ├── user_model.dart         # User profile & role definitions
+│   │   ├── registration_model.dart # Registration records & QR payload
+│   │   └── notification_model.dart # In-app & push notification schema
+│   │
+│   ├── providers/                  # State management (Provider pattern)
+│   │   ├── auth_provider.dart      # Auth state, login/logout, role resolution
+│   │   ├── event_provider.dart     # Event listings, search, filtering & creation
+│   │   ├── admin_provider.dart     # Admin stats, user & approval states
+│   │   └── theme_provider.dart     # Dark/Light mode toggle & persistence
+│   │
+│   ├── screens/
+│   │   ├── auth/                   # Authentication & onboarding flow
+│   │   │   ├── splash_screen.dart          # Animated splash → role-based routing
+│   │   │   ├── onboarding_screen.dart      # First-launch onboarding slides
+│   │   │   ├── login_screen.dart           # Email/password & Google Sign-In
+│   │   │   └── register_screen.dart        # New account registration with role selection
+│   │   │
+│   │   ├── attendee/               # Attendee-facing screens
+│   │   │   ├── home_dashboard_screen.dart          # Home feed with banners & categories
+│   │   │   ├── discover_events_screen.dart         # Full event listing with filters
+│   │   │   ├── search_filter_screen.dart           # Advanced search & filtering
+│   │   │   ├── event_details_screen.dart           # Event detail view
+│   │   │   ├── registration_confirmation_screen.dart # Registration success & QR
+│   │   │   ├── qr_pass_screen.dart                 # QR code pass display
+│   │   │   ├── my_events_screen.dart               # Registered & past events
+│   │   │   ├── favorites_screen.dart               # Bookmarked events
+│   │   │   ├── gallery_view_screen.dart            # Event photo gallery
+│   │   │   ├── feedback_screen.dart                # Rate & review an event
+│   │   │   └── certificate_preview_screen.dart     # Attendance certificate PDF preview
+│   │   │
+│   │   ├── organizer/              # Organizer-facing screens
+│   │   │   ├── organizer_dashboard_screen.dart     # Analytics & stats dashboard
+│   │   │   ├── create_edit_event_screen.dart       # Create / edit event form
+│   │   │   ├── participants_screen.dart            # Registered attendees list
+│   │   │   ├── attendance_scanner_screen.dart      # Live QR scanner for check-in
+│   │   │   ├── announcements_screen.dart           # Broadcast push notifications
+│   │   │   ├── gallery_upload_screen.dart          # Upload post-event photos
+│   │   │   └── organizer_feedback_screen.dart      # View attendee ratings & reviews
+│   │   │
+│   │   ├── admin/                  # Admin-facing screens
+│   │   │   ├── admin_dashboard_screen.dart         # Platform-wide metrics command center
+│   │   │   ├── manage_users_screen.dart            # User role & status management
+│   │   │   ├── manage_events_screen.dart           # Event moderation panel
+│   │   │   ├── approvals_screen.dart               # Organizer approval requests
+│   │   │   ├── content_moderation_screen.dart      # Flagged content review
+│   │   │   └── reports_screen.dart                 # User complaints & escalations
+│   │   │
+│   │   ├── common/                 # Shared screens for all roles
+│   │   │   ├── profile_screen.dart                 # User profile view & edit
+│   │   │   ├── settings_screen.dart                # App settings (theme, account)
+│   │   │   └── notifications_screen.dart           # In-app notification history
+│   │   │
+│   │   ├── shared/                 # Cross-role utility screens
+│   │   │   ├── event_map_screen.dart               # OpenStreetMap event venue viewer
+│   │   │   └── location_picker_screen.dart         # Interactive pin-drop location picker
+│   │   │
+│   │   ├── about_us_screen.dart    # About the app & team
+│   │   └── contact_us_screen.dart  # Contact form & support info
+│   │
+│   ├── services/                   # Backend & infrastructure services
+│   │   ├── auth_service.dart               # Firebase Auth helper methods
+│   │   ├── notification_service.dart       # FCM & local notification setup
+│   │   ├── image_upload_service.dart       # Cloudinary image upload handling
+│   │   ├── certificate_service.dart        # PDF certificate generation logic
+│   │   ├── pdf_report_service.dart         # PDF report generation for organizers
+│   │   └── page_transitions.dart           # Custom animated route transitions
+│   │
+│   ├── theme/
+│   │   └── app_theme.dart          # Light & dark theme definitions (Material 3)
+│   │
+│   └── widgets/
+│       ├── premium_ui.dart         # Reusable premium UI components & cards
+│       └── network_aware_wrapper.dart  # Connectivity-aware wrapper widget
+│
+├── pubspec.yaml                    # Project dependencies and asset registry
+└── README.md
 ```
 
 ---
 
-## How to Run the Project (Step-by-Step)
+## ⚙️ Tech Stack & Key Libraries
 
-### 1. Prerequisites
-- **Flutter SDK**: Version 3.11.4 or newer (`flutter --version`)
-- **Android Studio / Xcode**: Configured with Android SDK / iOS toolchain
-- **Device / Emulator**: Connected Android device/emulator or iOS Simulator
-
-### 2. Setup Steps
-
-1. **Open the Project Directory**:
-   ```bash
-   cd EventEase
-   ```
-
-2. **Install Flutter Dependencies**:
-   ```bash
-   flutter pub get
-   ```
-
-3. **Firebase Configuration**:
-   - Ensure `firebase_options.dart` exists in `lib/`.
-   - For Android, verify `android/app/google-services.json` is present.
-   - For iOS, verify `ios/Runner/GoogleService-Info.plist` is present.
-   - If setting up a fresh project, run:
-     ```bash
-     flutterfire configure
-     ```
-
-4. **Verify Connected Devices**:
-   ```bash
-   flutter devices
-   ```
-
-5. **Run the Application**:
-   ```bash
-   flutter run
-   ```
+| Category | Technology |
+|---|---|
+| **Framework** | Flutter (Material 3) |
+| **Backend** | Firebase Authentication, Cloud Firestore, Cloud Storage |
+| **Push Notifications** | Firebase Cloud Messaging (FCM) + `flutter_local_notifications` |
+| **State Management** | `provider: ^6.1.5` |
+| **Maps** | `flutter_map: ^7.0.2` (OpenStreetMap) + `latlong2` + `geolocator` |
+| **Image Hosting** | Cloudinary via `ImageUploadService` |
+| **QR Code** | `qr_flutter` (generation) + `mobile_scanner` (camera scan check-in) |
+| **PDF / Certificates** | `pdf: ^3.10.4` + `printing: ^5.11.1` |
+| **Google Sign-In** | `google_sign_in: 6.2.1` |
+| **Image Picker** | `image_picker: ^1.1.2` + `cached_network_image` |
+| **Ratings** | `flutter_rating_bar: ^4.0.1` |
+| **Connectivity** | `connectivity_plus: ^6.0.5` |
+| **Sharing** | `share_plus: ^13.3.0` |
+| **Persistence** | `shared_preferences: ^2.3.2` |
+| **Networking** | `http: ^1.6.0` + `googleapis_auth: ^2.3.3` |
 
 ---
 
-## ⚙️ Key Technical Stack & Libraries
-- **Frontend**: Flutter (Material 3 with custom premium widgets)
-- **Backend**: Firebase Authentication, Cloud Firestore, Cloud Storage, Firebase Cloud Messaging
-- **State Management**: Provider (`provider: ^6.1.5`)
-- **Maps**: `flutter_map: ^7.0.2` (OpenStreetMap), `latlong2`, `geolocator`
-- **Image Hosting**: Cloudinary via `ImageUploadService`
-- **QR Code Engine**: `qr_flutter` (Pass generation) & `mobile_scanner` (Live camera check-in)
-- **Document Generation**: `pdf` and `printing` for certificates
+## 🚀 How to Run (Step-by-Step)
+
+### Prerequisites
+- **Flutter SDK**: `^3.11.4` — verify with `flutter --version`
+- **Android Studio / VS Code** with Flutter & Dart plugins
+- **Connected Device** or Emulator/Simulator
+
+### Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/AbdulWasayAli/EventEast.git
+cd EventEast
+
+# 2. Install dependencies
+flutter pub get
+
+# 3. Verify Firebase config files are present:
+#    android/app/google-services.json
+#    lib/firebase_options.dart
+#    assets/service-account.json
+
+# 4. Check connected devices
+flutter devices
+
+# 5. Run the app
+flutter run
+
+# 6. Build release APK
+flutter build apk --release
+```
+
+---
+
+## 🔥 Firebase Services Used
+
+| Service | Purpose |
+|---|---|
+| **Firebase Auth** | Email/password login, Google Sign-In, role-based session management |
+| **Cloud Firestore** | Events, users, registrations, notifications, feedback, gallery data |
+| **Cloud Storage** | Event banner images & gallery photo uploads |
+| **Firebase Cloud Messaging** | Push notifications for event updates & announcements |
+
+---
+
+## 🗺️ Map Feature
+
+EventEast uses **OpenStreetMap** (free, no billing key required):
+- **`LocationPickerScreen`** — Organizers drop a pin to set event GPS coordinates.
+- **`EventMapScreen`** — Attendees view the venue on a map and open navigation apps via `url_launcher`.
+
+---
+
+## 📸 App Screens Summary
+
+| Screen | Role | Description |
+|---|---|---|
+| Splash Screen | All | Animated intro → auto-routes by login state & role |
+| Onboarding | Guest | 4-slide first-launch introduction (shown once) |
+| Login / Register | Guest | Email + Google Sign-In with role selection |
+| Home Dashboard | Attendee | Event feed, banners, categories |
+| Event Details | Attendee | Full event info with map & registration |
+| QR Pass | Attendee | Digital QR pass for event check-in |
+| My Events | Attendee | Registered & past events tracker |
+| Certificate | Attendee | PDF attendance certificate download |
+| Organizer Dashboard | Organizer | Analytics — events, registrations, check-ins |
+| Create/Edit Event | Organizer | Full event creation form with map pin |
+| QR Scanner | Organizer | Live camera QR scan for attendee check-in |
+| Admin Dashboard | Admin | Platform-wide stats & control panel |
+| Manage Users | Admin | User role & status management |
+| Approvals | Admin | Organizer verification request review |
+
+---
+
+## 👨‍💻 Developer
+
+**Abdul Wasay Ali**
+GitHub: [@AbdulWasayAli](https://github.com/AbdulWasayAli)
